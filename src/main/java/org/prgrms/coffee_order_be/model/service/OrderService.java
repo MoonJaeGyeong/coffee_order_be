@@ -1,6 +1,8 @@
 package org.prgrms.coffee_order_be.model.service;
 
 import lombok.RequiredArgsConstructor;
+import org.prgrms.coffee_order_be.exception.ErrorCode;
+import org.prgrms.coffee_order_be.exception.ErrorException;
 import org.prgrms.coffee_order_be.model.dto.request.UpdateOrderReq;
 import org.prgrms.coffee_order_be.model.dto.OrderItemDto;
 import org.prgrms.coffee_order_be.model.dto.request.OrderProductDto;
@@ -33,7 +35,7 @@ public class OrderService {
 
         for(OrderProductDto orderItem : req.getOrderItems()){
             Product product = productRepository.findById(orderItem.getProductsUUID())
-                    .orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
+                    .orElseThrow(() -> new ErrorException(ErrorCode.NOT_EXIST_PRODUCT));
 
             orderItems.add(OrderItem.builder()
                     .product(product)
@@ -53,7 +55,7 @@ public class OrderService {
     public List<GetOrdersRes> getOrder(String email){
         List<Order> orders = orderRepository.findAllByEmailOrderByCreatedAtDesc(email);
         if(orders.isEmpty())
-            throw new RuntimeException("주문 내역이 없습니다.");
+            throw new ErrorException(ErrorCode.NOT_EXIST_ORDER);
 
         List<GetOrdersRes> getOrdersResList = new ArrayList<>();
 
@@ -72,10 +74,10 @@ public class OrderService {
 
     public Order updateOrder(UUID uuid, UpdateOrderReq req){
         Order order = orderRepository.findById(uuid)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 주문 입니다."));
+                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_EXIST_ORDER));
 
         if(order.getOrderStatus() != OrderStatus.ORDER_COMPLETED)
-            throw new RuntimeException("배달이 진행 중이므로 상담원에게 전화 연락 부탁드립니다.");
+            throw new ErrorException(ErrorCode.IN_PROGRESS_DELIVERY);
 
         order.update(req.getAddress(), req.getPostcode());
         orderRepository.save(order);
@@ -85,10 +87,10 @@ public class OrderService {
 
     public String deleteOrder(UUID uuid){
         Order order = orderRepository.findById(uuid)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 주문 입니다."));
+                .orElseThrow(() -> new ErrorException(ErrorCode.NOT_EXIST_ORDER));
 
         if(order.getOrderStatus() != OrderStatus.ORDER_COMPLETED)
-            throw new RuntimeException("배달이 진행 중이므로 삭제가 불가능합니다.");
+            throw new ErrorException(ErrorCode.IN_PROGRESS_DELIVERY);
 
         orderRepository.delete(order);
 

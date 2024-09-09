@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.prgrms.coffee_order_be.exception.ErrorResponse;
 import org.prgrms.coffee_order_be.model.dto.request.CreateOderReq;
 import org.prgrms.coffee_order_be.model.dto.request.UpdateOrderReq;
 import org.prgrms.coffee_order_be.model.dto.response.GetOrdersRes;
@@ -26,30 +27,30 @@ public class OrderController {
 
     @Operation(summary = "주문 생성")
     @PostMapping
-    public ResponseEntity<List<OrderItem>> createOrder(@RequestBody @Valid CreateOderReq req){
+    public ErrorResponse<List<OrderItem>> createOrder(@RequestBody @Valid CreateOderReq req){
         List<OrderItem> resp = orderService.createOrder(req);
 
-        return ResponseEntity.ok(resp);
+        return new ErrorResponse<>(resp);
     }
 
     @Operation(summary = "이메일로 주문 조회")
     @GetMapping
-    public ResponseEntity<List<GetOrdersRes>> getOrder(@RequestParam("email") String email){
+    public ErrorResponse<List<GetOrdersRes>> getOrder(@RequestParam("email") String email){
         List<GetOrdersRes> resp = orderService.getOrder(email);
-        return ResponseEntity.ok(resp);
+        return new ErrorResponse<>(resp);
     }
 
     @Operation(summary = "주문 수정")
     @PutMapping("/{id}")
-    public ResponseEntity<Order> updateOrder(@PathVariable("id") UUID uuid, @RequestBody @Valid UpdateOrderReq req){
+    public ErrorResponse<Order> updateOrder(@PathVariable("id") UUID uuid, @RequestBody @Valid UpdateOrderReq req){
         Order resp = orderService.updateOrder(uuid, req);
-        return ResponseEntity.ok(resp);
+        return new ErrorResponse<>(resp);
     }
 
     @Operation(summary = "주문 삭제")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteOrder(@PathVariable("id") UUID uuid){
+    public ErrorResponse<?> deleteOrder(@PathVariable("id") UUID uuid){
         String resp = orderService.deleteOrder(uuid);
-        return ResponseEntity.ok(resp);
+        return new ErrorResponse<>(resp);
     }
 }

@@ -6,9 +6,9 @@ import lombok.Getter;
 
 @Getter
 public class UpdateOrderReq {
-    @NotBlank
+    @NotNull
     private String address;
 
-    @NotBlank
+    @NotNull
     private String postcode;
 }

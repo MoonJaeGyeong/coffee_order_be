@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.prgrms.coffee_order_be.exception.ErrorResponse;
 import org.prgrms.coffee_order_be.model.dto.ProductDto;
 import org.prgrms.coffee_order_be.model.dto.request.CreateProductReq;
 import org.prgrms.coffee_order_be.model.dto.request.UpdateProductReq;
@@ -25,37 +26,37 @@ public class ProductController {
 
     @Operation(summary = "상품 생성")
     @PostMapping
-    public ResponseEntity<ProductDto> createProduct(@RequestBody @Valid CreateProductReq req){
+    public ErrorResponse<ProductDto> createProduct(@RequestBody @Valid CreateProductReq req){
         ProductDto resp = productService.createProduct(req);
-        return ResponseEntity.ok(resp);
+        return new ErrorResponse<>(resp);
     }
 
     @Operation(summary = "상품 리스트 조회")
     @GetMapping
-    public ResponseEntity<List<GetProductsRes>> getProducts(){
+    public ErrorResponse<List<GetProductsRes>> getProducts(){
         List<GetProductsRes> resp = productService.getProducts();
-        return ResponseEntity.ok(resp);
+        return new ErrorResponse<>(resp);
     }
 
     @Operation(summary = "상품 상세 조회")
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getProduct(@PathVariable(name = "id") UUID uuid){
+    public ErrorResponse<ProductDto> getProduct(@PathVariable(name = "id") UUID uuid){
         ProductDto resp = productService.getProduct(uuid);
-        return ResponseEntity.ok(resp);
+        return new ErrorResponse<>(resp);
     }
 
     @Operation(summary = "상품 수정")
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDto> updateProduct(@PathVariable(name = "id") UUID uuid,
+    public ErrorResponse<ProductDto> updateProduct(@PathVariable(name = "id") UUID uuid,
                                                     @RequestBody @Valid UpdateProductReq req) {
         ProductDto resp = productService.updateProduct(uuid, req);
-        return ResponseEntity.ok(resp);
+        return new ErrorResponse<>(resp);
     }
 
     @Operation(summary = "상품 삭제")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable(name = "id") UUID uuid){
+    public ErrorResponse<String> deleteProduct(@PathVariable(name = "id") UUID uuid){
         String resp = productService.deleteProduct(uuid);
-        return ResponseEntity.ok(resp);
+        return new ErrorResponse<>(resp);
     }
 }

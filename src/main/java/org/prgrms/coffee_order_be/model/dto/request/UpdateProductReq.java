@@ -6,9 +6,9 @@ import lombok.Getter;
 
 @Getter
 public class UpdateProductReq {
-    @NotBlank
+    @NotNull
     private long price;
 
-    @NotBlank
+    @NotNull
     private String description;
 }

@@ -9,16 +9,16 @@ import java.util.List;
 
 @Getter
 public class CreateOderReq {
-    @NotBlank
+    @NotNull
     private List<OrderProductDto> orderItems;
 
-    @NotBlank
+    @NotNull
     private String email;
 
-    @NotBlank
+    @NotNull
     private String address;
 
-    @NotBlank
+    @NotNull
     private String postcode;
 
     public Order toOrder(){
