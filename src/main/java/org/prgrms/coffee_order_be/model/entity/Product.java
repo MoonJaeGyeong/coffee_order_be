@@ -3,6 +3,7 @@ package org.prgrms.coffee_order_be.model.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.UUID;
 
 @Entity(name = "products")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -58,10 +59,8 @@ public class Product {
                 .build();
     }
 
-    public Product update(UpdateProductReq req){
+    public void update(UpdateProductReq req){
         this.price = req.getPrice();
         this.description = req.getDescription();
-
-        return this;
     }
 }

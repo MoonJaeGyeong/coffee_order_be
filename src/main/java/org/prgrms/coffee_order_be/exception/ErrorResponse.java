@@ -39,4 +39,10 @@ public class ErrorResponse<T> {
         this.code = errors.getCode();
     }
 
+    public ErrorResponse(IllegalArgumentException ex){
+        this.isSuccess = false;
+        this.code = 404;
+        this.message = ex.getMessage();
+    }
+
 }

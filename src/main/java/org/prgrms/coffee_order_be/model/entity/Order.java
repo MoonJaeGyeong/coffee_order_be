@@ -1,10 +1,7 @@
 package org.prgrms.coffee_order_be.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,14 +10,15 @@ import java.util.UUID;
 
 @Entity(name = "orders")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "order_id")
     private UUID id;
 
-    private String email;
+    @Embedded
+    private Email email;
 
     private String address;
 
@@ -40,17 +38,15 @@ public class Order {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Order(String email, String address, String postcode) {
+    public Order(Email email, String address, String postcode) {
         this.email = email;
         this.address = address;
         this.postcode = postcode;
         this.orderStatus = OrderStatus.ORDER_COMPLETED;
     }
 
-    public Order update(String address, String postcode){
+    public void update(String address, String postcode){
         this.address = address;
         this.postcode = postcode;
-
-        return this;
     }
 }

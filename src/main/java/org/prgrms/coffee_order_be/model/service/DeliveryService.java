@@ -21,6 +21,5 @@ public class DeliveryService {
         for (Order order : orderList) {
             order.setOrderStatus(OrderStatus.IN_DELIVERY);
         }
-        orderRepository.saveAll(orderList);
     }
 }

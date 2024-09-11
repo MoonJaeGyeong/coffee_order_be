@@ -49,7 +49,7 @@ public class OrderController {
 
     @Operation(summary = "주문 삭제")
     @DeleteMapping("/{id}")
-    public ErrorResponse<?> deleteOrder(@PathVariable("id") UUID uuid){
+    public ErrorResponse<String> deleteOrder(@PathVariable("id") UUID uuid){
         String resp = orderService.deleteOrder(uuid);
         return new ErrorResponse<>(resp);
     }

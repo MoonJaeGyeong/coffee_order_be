@@ -16,6 +16,7 @@ import org.prgrms.coffee_order_be.model.repository.OrderItemRepository;
 import org.prgrms.coffee_order_be.model.repository.OrderRepository;
 import org.prgrms.coffee_order_be.model.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,11 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
 
+    @Transactional
     public List<OrderItem> createOrder(CreateOderReq req){
         Order order = req.toOrder();
+        orderRepository.save(order);
+
         List<OrderItem> orderItems = new ArrayList<>();
 
         for(OrderProductDto orderItem : req.getOrderItems()){
@@ -46,7 +50,6 @@ public class OrderService {
                     .build());
         }
 
-        orderRepository.save(order);
         orderItemRepository.saveAll(orderItems);
 
         return orderItems;
@@ -71,7 +74,7 @@ public class OrderService {
         return getOrdersResList;
     }
 
-
+    @Transactional
     public Order updateOrder(UUID uuid, UpdateOrderReq req){
         Order order = orderRepository.findById(uuid)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_EXIST_ORDER));
@@ -80,11 +83,11 @@ public class OrderService {
             throw new ErrorException(ErrorCode.IN_PROGRESS_DELIVERY);
 
         order.update(req.getAddress(), req.getPostcode());
-        orderRepository.save(order);
 
         return order;
     }
 
+    @Transactional
     public String deleteOrder(UUID uuid){
         Order order = orderRepository.findById(uuid)
                 .orElseThrow(() -> new ErrorException(ErrorCode.NOT_EXIST_ORDER));
